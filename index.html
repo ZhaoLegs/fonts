@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>字体预览工具</title>
+    <style>
+        body {
+            font-family: 'Ola Sans Compact', system-ui, -apple-system, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            color: #2c3e50;
+        }
+
+        .controls {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #e2e2e2;
+        }
+
+        .preview {
+            margin-top: 20px;
+            padding: 20px;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid #e2e2e2;
+        }
+
+        .control-group {
+            margin-bottom: 15px;
+            padding: 10px 0;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-size: 14px;
+            color: #86868b;
+            font-weight: 500;
+        }
+
+        .button-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .size-btn, .weight-btn, .font-btn {
+            padding: 6px 12px;
+            border: 1px solid #e2e2e2;
+            background: white;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 13px;
+            min-width: 44px;
+            text-align: center;
+        }
+
+        .size-btn:hover, .weight-btn:hover, .font-btn:hover {
+            background-color: #f5f5f7;
+        }
+
+        .size-btn.active, .weight-btn.active, .font-btn.active {
+            background: #0071e3;
+            color: white;
+            border-color: #0071e3;
+        }
+
+        #previewText {
+            word-wrap: break-word;
+            font-family: 'Ola Sans Compact', sans-serif;
+            margin: 0;
+            line-height: 1.5;
+            color: #1d1d1f;
+            white-space: pre-wrap;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0 0 20px 0;
+            color: #1d1d1f;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="controls">
+        <div class="control-group">
+            <label>字体选择</label>
+            <div class="button-group">
+                <button class="font-btn active" data-font="'Ola Sans Compact'">Ola Sans Compact</button>
+                <button class="font-btn" data-font="'Ola Sans Mono'">Ola Sans Mono</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>字体大小</label>
+            <div class="button-group">
+                <button class="size-btn" data-size="8">8</button>
+                <button class="size-btn" data-size="16">16</button>
+                <button class="size-btn" data-size="24">24</button>
+                <button class="size-btn" data-size="32">32</button>
+                <button class="size-btn" data-size="40">40</button>
+                <button class="size-btn" data-size="48">48</button>
+                <button class="size-btn" data-size="56">56</button>
+                <button class="size-btn" data-size="64">64</button>
+                <button class="size-btn" data-size="72">72</button>
+                <button class="size-btn" data-size="80">80</button>
+            </div>
+        </div>
+
+        <div class="control-group">
+            <label>字体粗细</label>
+            <div class="button-group">
+                <button class="weight-btn" data-weight="300">300</button>
+                <button class="weight-btn" data-weight="400">400</button>
+                <button class="weight-btn" data-weight="500">500</button>
+                <button class="weight-btn" data-weight="600">600</button>
+                <button class="weight-btn" data-weight="700">700</button>
+                <button class="weight-btn" data-weight="800">800</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="preview">
+        <p id="previewText">ABCDEFGHIJKLMNOPQRSTUVWXYZ
+abcdefghijklmnopqrstuvwxyz
+0123456789
+!"#$%&'()*+,-./:;<=>?@[\]^_`{|}~ÁÂÄÀÅÃÆÇÐÉÊËÈÍÎÏÌŁÑÓÔÖÒØÕŒÞŠÚÛÜÙÝŸŽáâäàåãæçðéêëèıíîïìłñóôöòøõœþšßúûüùýÿž/f_f ﬁﬂªºΔΩπ⁄½⅓⅔¼¾⅕⅖⅗⅘⅙⅚⅛⅜⅝⅞₀₁₂₃₄₅₆₇₈₉⁰¹²³⁴⁵⁶⁷⁸⁹  …¡¿·•‥­–—‐</p>
+    </div>
+
+    <script>
+        function updatePreview(size, weight) {
+            const previewText = document.getElementById('previewText');
+            
+            previewText.style.fontSize = `${size}px`;
+            previewText.style.fontWeight = weight;
+            const activeFont = document.querySelector('.font-btn.active').dataset.font;
+            previewText.style.fontFamily = activeFont;
+        }
+
+        // 字体大小按钮
+        document.querySelectorAll('.size-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.size-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const size = btn.dataset.size;
+                const weight = document.querySelector('.weight-btn.active')?.dataset.weight || 400;
+                updatePreview(size, weight);
+            });
+        });
+
+        // 字体粗细按钮
+        document.querySelectorAll('.weight-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.weight-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const weight = btn.dataset.weight;
+                const size = document.querySelector('.size-btn.active')?.dataset.size || 20;
+                updatePreview(size, weight);
+            });
+        });
+
+        // 字体选择按钮
+        document.querySelectorAll('.font-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                document.querySelectorAll('.font-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                const size = document.querySelector('.size-btn.active')?.dataset.size || 24;
+                const weight = document.querySelector('.weight-btn.active')?.dataset.weight || 400;
+                updatePreview(size, weight);
+            });
+        });
+
+        // 设置默认选中状态
+        document.querySelector('[data-size="24"]').classList.add('active');
+        document.querySelector('[data-weight="400"]').classList.add('active');
+        updatePreview(24, 400);
+    </script>
+</body>
+</html>
